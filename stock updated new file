@@ -1,0 +1,59 @@
+def main():
+    # Step 1: Define a hardcoded price dictionary
+    stock_prices = {
+        "AAPL": 180,
+        "TSLA": 250,
+        "GOOGL": 2800.0,
+        "MSFT": 300.0,
+   
+    }
+
+    print("Welcome to Simple Stock Traker")
+    print("Available stocks (with manual prices):")
+    for sym, price in stock_prices.items():
+        print(f"  {sym}: ${price:.2f}")
+
+    # Step 2: Read user input for holdings
+    holdings = {}  # ticker → quantity
+    while True:
+        inp = input("Enter ticker and quantity (e.g. AAPL 10), or just press Enter to stop: ").strip()
+        if inp == "":
+            break
+        parts = inp.split()
+        if len(parts) != 2:
+            print("Invalid input. Please enter in format: <TICKER> <QUANTITY>")
+            continue
+        ticker = parts[0].upper()
+        try:
+            qty = float(parts[1])
+        except ValueError:
+            print("Quantity must be a number.")
+            continue
+
+        if ticker not in stock_prices:
+            print(f"Ticker {ticker} not in price dictionary. Please choose from: {list(stock_prices.keys())}")
+            continue
+
+        # accumulate if already input
+        holdings[ticker] = holdings.get(ticker, 0.0) + qty
+
+    if not holdings:
+        print("No holdings entered. Exiting.")
+        return
+
+    # Step 3: Compute per-stock and total values
+    print("\nYour Portfolio:")
+    print(f"{'Ticker':<8}{'Qty':>8}{'Price':>12}{'Value':>14}")
+    print("-" * 42)
+    total_value = 0.0
+    for ticker, qty in holdings.items():
+        price = stock_prices[ticker]
+        value = qty * price
+        total_value += value
+        print(f"{ticker:<8}{qty:>8.2f}{price:>12.2f}{value:>14.2f}")
+
+    print("-" * 42)
+    print(f"{'Total Value:':<28}{total_value:>14.2f}")
+
+if __name__ == "__main__":
+    main()
